@@ -1,53 +1,58 @@
 import socket
 import threading
 
+# Define o endereço e porta do servidor
 HOST = '127.0.0.1'
 PORT = 7000
 ADDR = (HOST, PORT)
 
+# Define as palavras proibidas no chat
 PALAVROES = {'batutinha', 'prolog'}
+# Define um dicionário com o Cliente e o número de banimentos
 banidos = {}
+# Define um dicionário com o IP e Porta dos clientes
 clientes = {}
 
+# Função para censurar uma mensagem
 def censurar_mensagem(mensagem):
     for palavra in PALAVROES:
         mensagem = mensagem.replace(palavra, '*' * len(palavra))
     return mensagem
 
-# função que verifica banimento
+# Função para verificar palavras proibidas na mensagem do cliente (e efetuar um banimento)
 def verificar_banimento(cliente, mensagem):
-    if any(palavra in mensagem for palavra in PALAVROES):
+    if(any(palavra in mensagem for palavra in PALAVROES)):
         banidos[cliente] = banidos.get(cliente, 0) + 1
-        if banidos[cliente] >= 3:
+        if(banidos[cliente] >= 3):
             return True
     return False
 
-# função para gerenciar cada cliente em uma thread
+# Função para gerenciar cada cliente em uma thread
 def handle_client(con, endereco):
     print(f"Cliente {endereco} conectado.")
-    clientes[endereco] = con  # armazena cada conexão do cliente
+    clientes[endereco] = con  # Armazena cada conexão do cliente
 
     try:
         while True:
             dados = con.recv(1024).decode()
-            if not dados:
+            if(not dados):
                 break
 
-            if ':' not in dados:
+            if(':' not in dados):
                 con.send("Formato inválido. Use 'destino:mensagem'.".encode())
                 continue
             
             destino_str, mensagem = dados.split(':', 1)
-            destino = eval(destino_str)  # converte a string para tupla
+            destino = eval(destino_str)  # Converte a string para tupla
 
-            # censura e verifica banimento
+            # Censura e verifica banimento
             mensagem_censurada = censurar_mensagem(mensagem)
-            if verificar_banimento(endereco, mensagem):
+            if(verificar_banimento(endereco, mensagem)):
                 con.send("Você foi banido por enviar mensagens proibidas.".encode())
                 break
 
-            # envia a mensagem ao destino
-            if destino in clientes:
+            # Envia a mensagem ao destino
+            if(destino in clientes):
                 clientes[destino].send(f"Mensagem de {endereco}: {mensagem_censurada}".encode())
                 con.send("Mensagem enviada com sucesso.".encode())
             else:
@@ -60,7 +65,7 @@ def handle_client(con, endereco):
         con.close()
         print(f"Cliente {endereco} desconectado.")
 
-
+# Função para iniciar o servidor
 def iniciar_servidor():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(ADDR)

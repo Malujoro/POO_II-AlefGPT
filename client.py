@@ -1,13 +1,16 @@
 import socket
 import threading
 
+# Define o endereço e porta do servidor
 HOST = '127.0.0.1'
 PORT = 7000
 ADDR = (HOST, PORT)
 
+# Efetua a conexão com o servidor
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect(ADDR)
 
+# Função para receber mensagens
 def escutar_mensagens():
     while True:
         try:
