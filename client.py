@@ -31,14 +31,14 @@ def menu():
 
         opcao = input("Escolha uma opção: ")
 
-        if opcao == '1':
+        if(opcao == '1'):
             destino_ip = input("Digite o IP do destinatário: ")
             destino_port = input("Digite a porta do destinatário: ")
             destino = (destino_ip, int(destino_port))
             msg = input("Digite a mensagem: ")
             client_socket.send(f"{destino}:{msg}".encode())
 
-        elif opcao == '2':
+        elif(opcao == '2'):
             print("Saindo...")
             client_socket.close()
             break

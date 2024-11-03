@@ -1,13 +1,18 @@
 Implementação de um chat básico:
-    ○ Deve ter no mínimo 3 clientes;
-    ○ Deverá ter dois códigos diferentes, o do servidor e do cliente;
+[X] ○ Deve ter no mínimo 3 clientes;
+[X] ○ Deverá ter dois códigos diferentes, o do servidor e do cliente;
     ○ O Cliente terá um menu onde ele irá escolher o que ele deseja fazer: 
-        ■ Mandar mensagem para 1 cliente informando a qual cliente que ele deseja mandar a 
-        mensagem;
+        ■ Mandar mensagem para 1 cliente informando a qual cliente que ele deseja mandar a mensagem;
         ■ Escutar até receber uma mensagem, depois ele volta para o menu;
         ■ Enviar mensagem e escutar a resposta e depois voltar ao menu;
         ■ Apenas escutar mensagens e mostrar na tela;
         ■ Sair.
-    ○ O servidor deverá censurar mensagens indevidas (as palavras são definidas pelo grupo).
-    ○ Caso o cliente mande 3 mensagens indevidas no período de 1 minuto, ele deve ser banido e as 
-    mensagens dele não serão mais transmitidas. 
+[X] ○ O servidor deverá censurar mensagens indevidas (as palavras são definidas pelo grupo).
+    ○ Caso o cliente mande 3 mensagens indevidas no período de 1 minuto, ele deve ser banido e as mensagens dele não serão mais transmitidas. 
+
+Adicionar o menu com as opções acima
+Adicionar sistema de tempo (pro banimento)
+Retirar as threads (utilizar apenas a lógica de while)
+Adicionar um "ID" pro cliente (pra enviar a mensagem só será preciso informar o ID do cliente e o host busca envia a mensagem baseado nele)
+Quando efetuar um banimento apenas impedir que as mensagens do usuário cheguem aos outros
+    (A lógica de fechar conexão permite que o usuário retorne ao sistema apenas se reconectando)
