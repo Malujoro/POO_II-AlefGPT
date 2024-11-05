@@ -1,4 +1,5 @@
 import socket
+import threading
 
 # Define o endereço e porta do servidor
 HOST = '127.0.0.1'
@@ -19,14 +20,17 @@ def escutar_mensagens():
             msg = client_socket.recv(1024).decode()
             print(f"\nMensagem recebida: {msg}\n")
         except:
-            print("\nErro ao receber mensagem.")
+            print("Erro ao receber mensagem.")
             break
+
+thread_escuta = threading.Thread(target=escutar_mensagens, daemon=True)
+thread_escuta.start()
 
 def menu():
     while True:
         print("\nMenu")
         print("1 - Enviar mensagem")
-        print("0 - Sair")
+        print("2 - Sair")
 
         opcao = input("Escolha uma opção: ")
 
@@ -35,7 +39,7 @@ def menu():
             msg = input("Digite a mensagem: ")
             client_socket.send(f"{nome}:{msg}".encode())
 
-        elif(opcao == '0'):
+        elif(opcao == '2'):
             print("Saindo...")
             client_socket.close()
             break
