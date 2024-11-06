@@ -1,7 +1,7 @@
 import socket
 
 # Define o endereço e porta do servidor
-HOST = '127.0.0.1'
+HOST = "127.0.0.1"
 PORT = 7000
 ADDR = (HOST, PORT)
 
@@ -14,18 +14,21 @@ client_socket.send(nome.encode())
 
 # Função para receber mensagens
 def escutar_mensagens():
-    while True:
-        try:
-            msg = client_socket.recv(1024).decode()
-            print(f"\nMensagem recebida: {msg}\n")
-        except KeyboardInterrupt:
-            print("\nEspera cancelada")
-        except:
-            print("\nErro ao receber mensagem.")
-            break
+    try:
+        dados = client_socket.recv(1024).decode()
+        nome_remetente, mensagem = dados.split(":", 1)
+        print(f"\nMensagem recebida de {nome_remetente}: {mensagem}\n")
+        return True
+    except KeyboardInterrupt:
+        print("\nEspera cancelada")
+        return False
+    except:
+        print("\nErro ao receber mensagem.")
+        return True
 
-def enviar_msg():
-    nome = input("Digite o nome do destinatário: ")
+def enviar_msg(nome = ""):
+    if(nome):
+        nome = input("Digite o nome do destinatário: ")
     msg = input("Digite a mensagem: ")
     client_socket.send(f"{nome}:{msg}".encode())
 
@@ -34,22 +37,25 @@ def menu():
         print("\nMenu")
         print("1 - Enviar mensagem")
         print("2 - Escutar, responder e voltar")
-        print("3 - Escutar eternamente")
-        print("4 - Enviar mensagem e esperar resposta")
+        print("3 - Enviar mensagem e esperar resposta")
+        print("4 - Apenas escutar")
         print("0 - Sair")
 
         opcao = input("Escolha uma opção: ")
 
-        if(opcao == '1'):
+        if(opcao == "1"):
             enviar_msg()
-        elif(opcao == '2'):
+        elif(opcao == "2"):
             escutar_mensagens()
             enviar_msg()
-        elif(opcao == '3'):
-            escutar_mensagens()
-        elif(opcao == '4'):
+        elif(opcao == "3"):
             enviar_msg()
-        elif(opcao == '0'):
+            escutar_mensagens()
+        elif(opcao == "4"):
+            while escutar_mensagens():
+                continue
+                
+        elif(opcao == "0"):
             print("Saindo...")
             client_socket.close()
             break
