@@ -18,15 +18,22 @@ def escutar_mensagens():
         try:
             msg = client_socket.recv(1024).decode()
             print(f"\nMensagem recebida: {msg}\n")
+        except KeyboardInterrupt:
+            print("\nEspera cancelada")
         except:
             print("\nErro ao receber mensagem.")
             break
+
+def enviar_msg():
+    nome = input("Digite o nome do destinatário: ")
+    msg = input("Digite a mensagem: ")
+    client_socket.send(f"{nome}:{msg}".encode())
 
 def menu():
     while True:
         print("\nMenu")
         print("1 - Enviar mensagem")
-        print("2 - Escutar , responder e voltar")
+        print("2 - Escutar, responder e voltar")
         print("3 - Escutar eternamente")
         print("4 - Enviar mensagem e esperar resposta")
         print("0 - Sair")
@@ -34,30 +41,18 @@ def menu():
         opcao = input("Escolha uma opção: ")
 
         if(opcao == '1'):
-            nome = input("Digite o nome do destinatário: ")
-            msg = input("Digite a mensagem: ")
-            client_socket.send(f"{nome}:{msg}".encode())
-        
+            enviar_msg()
         elif(opcao == '2'):
             escutar_mensagens()
-            nome = input("Digite o nome do destinatário: ")
-            msg = input("Digite a mensagem: ")
-            client_socket.send(f"{nome}:{msg}".encode())
-        
+            enviar_msg()
         elif(opcao == '3'):
             escutar_mensagens()
-        
         elif(opcao == '4'):
-            nome = input("Digite o nome do destinatário: ")
-            msg = input("Digite a mensagem: ")
-            client_socket.send(f"{nome}:{msg}".encode())
-            escutar_mensagens()
-
+            enviar_msg()
         elif(opcao == '0'):
             print("Saindo...")
             client_socket.close()
             break
-
         else:
             print("Opção inválida")
 

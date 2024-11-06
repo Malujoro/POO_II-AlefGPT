@@ -14,7 +14,7 @@ Implementação de um chat básico:
 Adicionar o menu com as opções acima
 
 Adicionar sistema de tempo (pro banimento) ()
-    banidos[nome] = [time2, time3, time4] (verificar tempo do atual e o primeiro salvo)
+    banidos[nome] = [11:22, 11:23, 11:24] (verificar tempo do atual e o primeiro salvo)
 
 Quando efetuar um banimento apenas impedir que as mensagens do usuário cheguem aos outros
     (A lógica de fechar conexão permite que o usuário retorne ao sistema apenas se reconectando)
