@@ -29,33 +29,36 @@ def verificar_banimento(cliente, mensagem):
 
 # Função para gerenciar cada cliente em uma thread
 def encaminhar_mensagem(con, nome_remetente):
-    dados = con.recv(1024).decode()
-    
-    if(not dados):
-        raise
+    try:
+        dados = con.recv(1024).decode()
+        
+        if(not dados):
+            return
 
-    if(':' not in dados):
-        con.send("Formato inválido. Use 'destino:mensagem'.".encode())
-        return
+        if(':' not in dados):
+            con.send("Formato inválido. Use 'destino:mensagem'.".encode())
+            return
 
-    nome_destino, mensagem = dados.split(':', 1)
-    nome_destino = nome_destino.lower()
+        nome_destino, mensagem = dados.split(':', 1)
+        nome_destino = nome_destino.lower()
 
-    # Censura e verifica banimento
-    mensagem_censurada = censurar_mensagem(mensagem)
-    if(verificar_banimento(nome_remetente, mensagem)):
-        con.send("Você foi banido por enviar mensagens proibidas.".encode())
-        # TODO arrumar o banimento
-        # del clientes[nome_remetente]
+        # Censura e verifica banimento
+        mensagem_censurada = censurar_mensagem(mensagem)
+        if(verificar_banimento(nome_remetente, mensagem)):
+            con.send("Você foi banido por enviar mensagens proibidas.".encode())
+            clientes[nome_remetente][0].close()
+            del clientes[nome_remetente]
 
-    # Envia a mensagem ao destino
-    if(nome_destino in clientes.keys()):
-        con.send(f"Mensagem de {nome_remetente}: {mensagem_censurada}".encode())
-        con.send("Mensagem enviada com sucesso.".encode())
-    else:
-        con.send("Destinatário não encontrado.".encode())
+        # Envia a mensagem ao destino
+        if(nome_destino in clientes.keys()):
+            con.send(f"Mensagem de {nome_remetente}: {mensagem_censurada}".encode())
+            con.send("Mensagem enviada com sucesso.".encode())
+        else:
+            con.send("Destinatário não encontrado.".encode())
 
-    print(f"Mensagem de {nome_remetente} para {nome_destino}: {mensagem_censurada}")
+        print(f"Mensagem de {nome_remetente} para {nome_destino}: {mensagem_censurada}")
+    except socket.timeout:
+        pass
 
 # Função para iniciar o servidor
 def iniciar_servidor():
@@ -80,17 +83,13 @@ def iniciar_servidor():
                 pass
 
             for nome, cliente in list(clientes.items()):
-                try:
-                    encaminhar_mensagem(cliente[0], nome)
-                except socket.timeout:
-                    pass
+                encaminhar_mensagem(cliente[0], nome)
 
         except KeyboardInterrupt:
             print("\nServidor encerrado")
             for nome, cliente in clientes.items():
                 cliente[0].close()
                 print(f"Cliente {nome} desconectado.")
-        # con.close()
             server_socket.close()
             break
 
