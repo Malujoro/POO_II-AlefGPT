@@ -1,7 +1,7 @@
 import socket
 
 # Define o endereço e porta do servidor
-HOST = '127.0.0.1'
+HOST = '10.180.45.61'
 PORT = 7000
 ADDR = (HOST, PORT)
 
@@ -29,38 +29,33 @@ def verificar_banimento(cliente, mensagem):
 
 # Função para gerenciar cada cliente em uma thread
 def encaminhar_mensagem(con, nome_remetente):
-    try:
-        while True:
-            dados = con.recv(1024).decode()
-            if(not dados):
-                break
+    dados = con.recv(1024).decode()
+    
+    if(not dados):
+        raise
 
-            if(':' not in dados):
-                con.send("Formato inválido. Use 'destino:mensagem'.".encode())
-                continue
+    if(':' not in dados):
+        con.send("Formato inválido. Use 'destino:mensagem'.".encode())
+        return
 
-            nome_destino, mensagem = dados.split(':', 1)
-            nome_destino = nome_destino.lower()
+    nome_destino, mensagem = dados.split(':', 1)
+    nome_destino = nome_destino.lower()
 
-            # Censura e verifica banimento
-            mensagem_censurada = censurar_mensagem(mensagem)
-            if(verificar_banimento(nome_remetente, mensagem)):
-                con.send("Você foi banido por enviar mensagens proibidas.".encode())
-                break
+    # Censura e verifica banimento
+    mensagem_censurada = censurar_mensagem(mensagem)
+    if(verificar_banimento(nome_remetente, mensagem)):
+        con.send("Você foi banido por enviar mensagens proibidas.".encode())
+        # TODO arrumar o banimento
+        # del clientes[nome_remetente]
 
-            # Envia a mensagem ao destino
-            if(nome_destino in clientes.keys()):
-                con.send(f"Mensagem de {nome_remetente}: {mensagem_censurada}".encode())
-                con.send("Mensagem enviada com sucesso.".encode())
-            else:
-                con.send("Destinatário não encontrado.".encode())
+    # Envia a mensagem ao destino
+    if(nome_destino in clientes.keys()):
+        con.send(f"Mensagem de {nome_remetente}: {mensagem_censurada}".encode())
+        con.send("Mensagem enviada com sucesso.".encode())
+    else:
+        con.send("Destinatário não encontrado.".encode())
 
-            print(f"Mensagem de {nome_remetente} para {nome_destino}: {mensagem_censurada}")
-
-    finally:
-        del clientes[nome_remetente]
-        # con.close()
-        print(f"Cliente {nome_remetente} desconectado.")
+    print(f"Mensagem de {nome_remetente} para {nome_destino}: {mensagem_censurada}")
 
 # Função para iniciar o servidor
 def iniciar_servidor():
@@ -69,20 +64,22 @@ def iniciar_servidor():
     server_socket.listen(3)
     print(f"Servidor rodando na porta {PORT}")
 
+    nome_usuario = ""
     while True:
         try:
-            server_socket.settimeout(1)
+            server_socket.settimeout(15)
             try:
                 con, endereco = server_socket.accept()
 
-                con.settimeout(2)
+                con.settimeout(15)
                 nome_usuario = con.recv(1024).decode().lower()
                 clientes[nome_usuario] = (con, endereco)
                 print(f"Cliente {nome_usuario} conectado.")
             except socket.timeout:
+                print(f"Timeout de conexão")
                 pass
 
-            for nome, cliente in clientes.items():
+            for nome, cliente in list(clientes.items()):
                 try:
                     encaminhar_mensagem(cliente[0], nome)
                 except socket.timeout:
@@ -90,8 +87,10 @@ def iniciar_servidor():
 
         except KeyboardInterrupt:
             print("\nServidor encerrado")
-            for client_socket in clientes:
-                client_socket.close()
+            for nome, cliente in clientes.items():
+                cliente[0].close()
+                print(f"Cliente {nome} desconectado.")
+        # con.close()
             server_socket.close()
             break
 
