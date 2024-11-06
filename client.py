@@ -26,6 +26,9 @@ def menu():
     while True:
         print("\nMenu")
         print("1 - Enviar mensagem")
+        print("2 - Escutar , responder e voltar")
+        print("3 - Escutar eternamente")
+        print("4 - Enviar mensagem e esperar resposta")
         print("0 - Sair")
 
         opcao = input("Escolha uma opção: ")
@@ -34,6 +37,21 @@ def menu():
             nome = input("Digite o nome do destinatário: ")
             msg = input("Digite a mensagem: ")
             client_socket.send(f"{nome}:{msg}".encode())
+        
+        elif(opcao == '2'):
+            escutar_mensagens()
+            nome = input("Digite o nome do destinatário: ")
+            msg = input("Digite a mensagem: ")
+            client_socket.send(f"{nome}:{msg}".encode())
+        
+        elif(opcao == '3'):
+            escutar_mensagens()
+        
+        elif(opcao == '4'):
+            nome = input("Digite o nome do destinatário: ")
+            msg = input("Digite a mensagem: ")
+            client_socket.send(f"{nome}:{msg}".encode())
+            escutar_mensagens()
 
         elif(opcao == '0'):
             print("Saindo...")
