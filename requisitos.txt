@@ -1,17 +1,15 @@
 Implementação de um chat básico:
 [X] ○ Deve ter no mínimo 3 clientes;
 [X] ○ Deverá ter dois códigos diferentes, o do servidor e do cliente;
-    ○ O Cliente terá um menu onde ele irá escolher o que ele deseja fazer: 
-        ■ Mandar mensagem para 1 cliente informando a qual cliente que ele deseja mandar a mensagem;
-        ■ Escutar até receber uma mensagem, depois ele volta para o menu;
-        ■ Enviar mensagem e escutar a resposta e depois voltar ao menu;
-        ■ Apenas escutar mensagens e mostrar na tela;
-        ■ Sair.
+[X] ○ O Cliente terá um menu onde ele irá escolher o que ele deseja fazer: 
+[X]     ■ Mandar mensagem para 1 cliente informando a qual cliente que ele deseja mandar a mensagem;
+[X]     ■ Escutar até receber uma mensagem, depois ele volta para o menu;
+[X]     ■ Enviar mensagem e escutar a resposta e depois voltar ao menu;
+[X]     ■ Apenas escutar mensagens e mostrar na tela;
+[X]     ■ Sair.
 [X] ○ O servidor deverá censurar mensagens indevidas (as palavras são definidas pelo grupo).
     ○ Caso o cliente mande 3 mensagens indevidas no período de 1 minuto, ele deve ser banido e as mensagens dele não serão mais transmitidas.
     
-
-Adicionar o menu com as opções acima
 
 Adicionar sistema de tempo (pro banimento) ()
     banidos[nome] = [11:22, 11:23, 11:24] (verificar tempo do atual e o primeiro salvo)
