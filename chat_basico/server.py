@@ -3,8 +3,7 @@ from time import time
 
 # Define o endereço e porta do servidor
 HOST = "127.0.0.1" # Localhost
-# HOST = "10.180.45.61"
-PORT = 7000
+PORT = 7001
 ADDR = (HOST, PORT)
 
 # Define as palavras proibidas no chat
@@ -40,7 +39,7 @@ def verificar_banimento(cliente, mensagem):
     return False
 
 
-# Função para gerenciar cada cliente em uma thread
+# Função para encaminhar as mensagens recebidas para o destinatário
 def encaminhar_mensagem(conexao_remetente, nome_remetente):
     try:
         dados = conexao_remetente.recv(1024).decode()

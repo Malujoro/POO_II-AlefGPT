@@ -2,7 +2,7 @@ import socket
 
 # Define o endereço e porta do servidor
 HOST = "127.0.0.1" # Localhost
-PORT = 7000
+PORT = 7001
 ADDR = (HOST, PORT)
 
 # Efetua a conexão com o servidor
@@ -18,15 +18,12 @@ def escutar_mensagens():
         dados = client_socket.recv(1024).decode()
         nome_remetente, mensagem = dados.split(":", 1)
         print(f"\nMensagem recebida de {nome_remetente}: {mensagem}\n")
-        return True
     except KeyboardInterrupt:
         print("\nEspera cancelada")
     except ValueError:
         print(f"\n{dados.upper()}")
     except:
         print("\nErro ao receber mensagem.")
-        return True
-    return False
 
 def enviar_msg():
     nome = input("Digite o nome do destinatário: ")
