@@ -21,10 +21,12 @@ def escutar_mensagens():
         return True
     except KeyboardInterrupt:
         print("\nEspera cancelada")
-        return False
+    except ValueError:
+        print(f"\n{dados.upper()}")
     except:
         print("\nErro ao receber mensagem.")
         return True
+    return False
 
 def enviar_msg():
     nome = input("Digite o nome do destinatário: ")

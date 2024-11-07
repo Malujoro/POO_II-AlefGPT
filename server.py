@@ -54,9 +54,11 @@ def encaminhar_mensagem(conexao_remetente, nome_remetente):
         # Censura e verifica banimento
         mensagem_censurada = censurar_mensagem(mensagem)
         if(verificar_banimento(nome_remetente, mensagem)):
-            conexao_remetente.send("Você foi banido por enviar mensagens proibidas.".encode())
+            conexao_remetente.send("Você foi banido por enviar mensagens proibidas".encode())
+            print(f"\n{nome_remetente} foi banido por enviar mensagens proibidas")
             clientes[nome_remetente][0].close()
             del clientes[nome_remetente]
+            return
 
         # Envia a mensagem ao destino
         if(nome_destino in clientes.keys()):
@@ -76,12 +78,12 @@ def iniciar_servidor():
     print(f"Servidor rodando na porta {PORT}")
     while True:
         try:
-            server_socket.settimeout(10)
+            server_socket.settimeout(1)
             try:
                 print("\nEsperando nova conexão...")
                 client_socket, endereco = server_socket.accept()
 
-                client_socket.settimeout(10)
+                client_socket.settimeout(1)
                 nome_usuario = client_socket.recv(1024).decode().lower()
                 clientes[nome_usuario] = (client_socket, endereco)
                 print(f"\nCliente [{nome_usuario}] conectado.")
@@ -93,6 +95,7 @@ def iniciar_servidor():
                 encaminhar_mensagem(cliente[0], nome)
 
         except KeyboardInterrupt:
+            print()
             for nome, cliente in list(clientes.items()):
                 cliente[0].close()
                 print(f"Cliente [{nome}] desconectado.")
@@ -100,6 +103,5 @@ def iniciar_servidor():
             print("\nServidor encerrado")
             server_socket.close()
             break
-
 
 iniciar_servidor()

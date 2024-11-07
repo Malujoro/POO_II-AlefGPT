@@ -8,11 +8,8 @@ Implementação de um chat básico:
 [X]     ■ Apenas escutar mensagens e mostrar na tela;
 [X]     ■ Sair.
 [X] ○ O servidor deverá censurar mensagens indevidas (as palavras são definidas pelo grupo).
-    ○ Caso o cliente mande 3 mensagens indevidas no período de 1 minuto, ele deve ser banido e as mensagens dele não serão mais transmitidas.
+[X] ○ Caso o cliente mande 3 mensagens indevidas no período de 1 minuto, ele deve ser banido e as mensagens dele não serão mais transmitidas.
     
-
-Adicionar sistema de tempo (pro banimento) ()
-    banidos[nome] = [11:22, 11:23, 11:24] (verificar tempo do atual e o primeiro salvo)
 
 Quando efetuar um banimento apenas impedir que as mensagens do usuário cheguem aos outros
     (A lógica de fechar conexão permite que o usuário retorne ao sistema apenas se reconectando)
